@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/user_search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="사용기록"/>
+
+    <item android:id="@+id/menu_blacklist"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:title="블랙리스트"/>
+    <item android:id="@+id/menu_setting"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="설정"/>
+    <item android:id="@+id/menu_suggestion"
+        android:icon="@android:drawable/ic_menu_send"
+        android:title="제안하기"/>
+
+</menu>
