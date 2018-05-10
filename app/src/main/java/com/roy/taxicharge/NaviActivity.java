@@ -1,6 +1,9 @@
 package com.roy.taxicharge;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -13,7 +16,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,22 +32,38 @@ public class NaviActivity extends AppCompatActivity {
 
     LocationManager locationManager;
     ArrayList<PositionType> position = new ArrayList<>();
-    TextView textView;
-    TextView testTV;
+    TextView chargeTV;
+    TextView speedTV;
+    ImageView[] gauges = new ImageView[5];
     Location location;
     ArrayList<Long> datelist = new ArrayList<>();
     double speed;
     final int ADDCOIN = 100;
-    final double minSpeed = 15;
+    final double MINSPEED = 15;
+    double gauge = 0;
+    int basicChargeGauge;
+    int taxiCharge;
+    float[] distanceForValue = new float[2]; //거리결과를 저장하는
+
+    TextView testTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navi);
 
-        testTV = findViewById(R.id.testTV);
-        textView = findViewById(R.id.tv);
+        testTv = findViewById(R.id.testTv);
+
+        speedTV = findViewById(R.id.speedTotext);
+        chargeTV = findViewById(R.id.chargeToText);
+
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        gauges[0] = findViewById(R.id.gauge_1);
+        gauges[1] = findViewById(R.id.gauge_2);
+        gauges[2] = findViewById(R.id.gauge_3);
+        gauges[3] = findViewById(R.id.gauge_4);
+        gauges[4] = findViewById(R.id.gauge_5);
 
         Criteria criteria = new Criteria();
 // 정확도
@@ -89,7 +110,7 @@ public class NaviActivity extends AppCompatActivity {
     LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            Log.i("adsf", "isChanged?");
+
             if (location != null) {
 
                 double latitude= location.getLatitude();
@@ -98,10 +119,67 @@ public class NaviActivity extends AppCompatActivity {
 
                 speedForHour(location);
 
-                testTV.append(latitude +"m , "+ longitude + "m");
+                int minutes = (int)(datelist.get(datelist.size()-1)-datelist.get(0))/60;
+                int hours = minutes/60;
 
-                if(speed <= minSpeed){
+                if(speed <= MINSPEED){
+                    //TODO : GPS TEST
+                    if(position.size()<3) return;
+                    long lateTime = datelist.get(datelist.size()-1) -datelist.get(datelist.size()-2);
+                    gauge += lateTime*4.057;
+                    basicChargeGauge += gauge;
+                    //testTv.append("Gauge = " + gauge +", LateTime = "+ lateTime*4.057 + "\n");
+                    testTv.append(datelist.get(datelist.size()-1) +" - " + datelist.get(0) + " = " + (datelist.get(datelist.size()-1)- datelist.get(0)) + "\n");
 
+
+
+                    testTv.append(hours +" : "+  minutes +" : "+(datelist.get(datelist.size()-1)-datelist.get(0))+"\n");
+                    //if(basicChargeGauge<2000) testTv.append("기본Gauge" + basicChargeGauge +"\n");
+                    if(gauge >=142){
+                        for(int i = 0; i < gauges.length; i++) gauges[i].setVisibility(View.INVISIBLE);
+
+                        if(basicChargeGauge <2000) return;
+
+                        taxiCharge += ADDCOIN;
+                        gauge = 0;
+                        chargeTV.setText("￦"+taxiCharge);
+                    }
+                }
+                else{
+                    if(distanceForValue[0]==0){ return; }
+                    gauge += distanceForValue[0];
+                    basicChargeGauge += gauge;
+                    //testTv.append("Gauge = " + gauge +", Distance = "+ distanceForValue[0] + "\n");
+                    testTv.append(datelist.get(datelist.size()-1) +" - " + datelist.get(0) + " = " + (datelist.get(datelist.size()-1)- datelist.get(0))+"\n");
+                    testTv.append(hours +" : "+  minutes +" : "+(datelist.get(datelist.size()-1)-datelist.get(0))+"\n");
+
+                    if(basicChargeGauge<2000) testTv.append("기본Gauge" + basicChargeGauge +"\n");
+                    if(gauge >=142){
+                        for(int i = 0; i < gauges.length; i++) gauges[i].setVisibility(View.INVISIBLE);
+
+                        if(basicChargeGauge <2000) return;
+
+                        taxiCharge += ADDCOIN;
+                        gauge = 0;
+                        chargeTV.setText("￦"+taxiCharge);
+                    }
+                }
+
+                //Gauge Image
+                if(gauge > 20){
+                    gauges[0].setVisibility(View.VISIBLE);
+                    if(gauge > 48){
+                        gauges[1].setVisibility(View.VISIBLE);
+                        if(gauge > 76){
+                            gauges[2].setVisibility(View.VISIBLE);
+                            if(gauge > 102){
+                                gauges[3].setVisibility(View.VISIBLE);
+                                if(gauge > 130){
+                                    gauges[4].setVisibility(View.VISIBLE);
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -132,9 +210,9 @@ public class NaviActivity extends AppCompatActivity {
 
             //내 위치 자동 갱신
         if(locationManager.isProviderEnabled("gps")){
-            locationManager.requestLocationUpdates("gps", 5000, 2, locationListener);
+            locationManager.requestLocationUpdates("gps", 3000, 2, locationListener);
         }else if(locationManager.isProviderEnabled("network")){
-            locationManager.requestLocationUpdates("network", 5000, 2, locationListener);
+            locationManager.requestLocationUpdates("network", 3000, 2, locationListener);
         }
 
         if(location==null){
@@ -145,49 +223,90 @@ public class NaviActivity extends AppCompatActivity {
             position.add(new PositionType(latitude, longitude)); //첫 시작 포인트
 
             speedForHour(location);
-
         }
+
+        taxiCharge = 3000;
+
+        chargeTV.setText("￦"+taxiCharge);
     }
 
-
-
     public void clickArrived(View v){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) return;
+
+        if (datelist.size() < 10 || position.size() < 10) {
+            Toast.makeText(this, "이동거리가 너무 짧거나, Start 버튼을 눌러주세요.", Toast.LENGTH_SHORT).show();
             return;
         }
+
+
+        //Log.i("time", datelist.get(datelist.size()-1) +" - " + datelist.get(0) + " = " + (datelist.get(datelist.size()-1)- datelist.get(0)));
         //내 위치 자동 갱신 제거
         locationManager.removeUpdates(locationListener);
 
+        //AlertDialog를 만들어주는 건축가(Builder)객체 생성
+        AlertDialog.Builder builder= new AlertDialog.Builder(this);
+        builder.setTitle("Result");
+        builder.setIcon(android.R.drawable.ic_dialog_info);
+
+        //커스텀뷰로 메세지영역 설정하기
+
+
+        LayoutInflater inflater= getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_result, null);
+
+        TextView hadTimeText = view.findViewById(R.id.timeTv);
+        TextView taxiChargeText = view.findViewById(R.id.chargeTv);
+
+        taxiChargeText.setText("￦ "+taxiCharge);
+
+        SimpleDateFormat sdfNow = new SimpleDateFormat("HH:mm:ss");
+        hadTimeText.setText(sdfNow.format(new Date((datelist.get(datelist.size()-1)-datelist.get(0))*1000)));
+
+        builder.setView(view);
+
+        builder.setPositiveButton("경로비교", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        AlertDialog dialog= builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
+//        Intent intent = new Intent(v.getContext(), ResultActivity.class);
+//        startActivity(intent);
     }
 
     public void speedForHour(Location location){
         //Date
-        Log.i("adsf", "isEnter to Method?");
-        Date date = new Date(System.currentTimeMillis());
-        long a1=date.getTime()/1000;
-        datelist.add(a1);
+        datelist.add(System.currentTimeMillis()/1000);
+
         if(position.size()>2) {
-            Log.i("adsf", "isEnter to If?");
-            float[] distanceForSpeed = new float[2]; //거리결과를 저장하는
-            location.distanceBetween(position.get(position.size() - 1).latitude, position.get(position.size() - 1).longitude, position.get(position.size() - 2).latitude, position.get(position.size() - 2).longitude, distanceForSpeed);
+            location.distanceBetween(position.get(position.size() - 1).latitude, position.get(position.size() - 1).longitude, position.get(position.size() - 2).latitude, position.get(position.size() - 2).longitude, distanceForValue);
 
             long timeForSpeed = datelist.get(datelist.size() - 1) - datelist.get(datelist.size() - 2);
 
-            speed = (distanceForSpeed[0] / (double) timeForSpeed) *3.6;
-
-            testTV.append(distanceForSpeed[0]+"\n");
-
+            speed = (distanceForValue[0] / (double) timeForSpeed) *3.6;
             //mySpeed = location.getSpeed();
             if(location.hasSpeed()){
-                textView.setText("Current Speed : " + speed + " km/h");
+                speedTV.setText(Math.round(speed*100d)/100 +" km/h");
             }
             else {
-                textView.setText("0 km/h");
+                speedTV.setText("0 km/h");
             }
-
         }else{
-            textView.setText("Current Speed : " + 0 + " km/h");
+            speedTV.setText(0 + " km/h");
         }
     }
-
 }

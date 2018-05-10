@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="#ff9999">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="※주의"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#ff0000"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:textStyle="bold"
+        android:textSize="12sp"
+        android:text="ㅁㄴ어ㅏ리멍ㄹ어라미너리ㅏㅁ허ㅣ마ㅓㄴ아ㅣ모
+        사ㅣㅗㅇ나ㅣ러미ㅏㅓ리ㅏ머시ㅏㅁ넝리ㅏㅓㅁㅇ라머사ㅗㅁ나ㅣ어리마ㅓ아ㅣ
+        송마ㅣㅓㄹ머리ㅏㅓㅁ사ㅘ어리마넝라뭇ㅁ오라ㅣㅁ노아시무나리ㅓㅏㅣ멓뭇와림심
+        기ㅏ어라ㅜ사욘시아즈이쇼우기용수아고야지요시운"
+        android:textColor="#ffffff"/>
+
+    <RelativeLayout
+        android:paddingTop="16dp"
+        android:background="#ffbbbb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time :  "
+            android:textSize="24dp"
+            android:textColor="#ffffff"/>
+        <TextView
+            android:id="@+id/timeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="24dp"
+            android:textColor="#ffffff"
+            android:layout_toRightOf="@id/tv1" />
+        <TextView
+            android:id="@+id/tv2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Charge :  "
+            android:textSize="24dp"
+            android:textColor="#ffffff"
+            android:layout_alignParentBottom="true"
+            />
+
+        <TextView
+            android:id="@+id/chargeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sdaf"
+            android:textSize="24dp"
+            android:textColor="#ffffff"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@id/tv2"/>
+
+    </RelativeLayout>
+
+</LinearLayout>
