@@ -30,7 +30,8 @@
         </activity>
         <activity
             android:name=".NaviActivity"
-            android:theme="@style/AppTheme.NoActionbar" />
+            android:theme="@style/AppTheme.NoActionbar"
+            android:screenOrientation="landscape"/>
         <activity android:name=".HowtoUseActivity" />
         <activity android:name=".ResultActivity"></activity>
     </application>

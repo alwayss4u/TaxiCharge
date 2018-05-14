@@ -63,7 +63,6 @@ import java.util.ArrayList;
             bitmaps[i] = BitmapFactory.decodeResource(res, R.drawable.taxi_1 +i);
 
         }
-        Log.i("aabbsd", bitmaps.toString());
         menuAdapter = new MenuAdapter(this, bitmaps);
         recyclerView.setAdapter(menuAdapter);
     }
