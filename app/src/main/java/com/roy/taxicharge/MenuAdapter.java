@@ -21,9 +21,14 @@ public class MenuAdapter extends RecyclerView.Adapter {
 
     Context context;
     Bitmap[] bitmaps;
+    String[] viewName;
+
     public MenuAdapter(Context context, Bitmap[] bitmaps) {
         this.context = context;
         this.bitmaps = bitmaps;
+
+        //TODO : CardView 이름 짓기.
+        viewName = new String[]{"TaxiMeter", "Name2", "Name3"};
     }
 
     @Override
@@ -41,6 +46,7 @@ public class MenuAdapter extends RecyclerView.Adapter {
         VH vh= (VH)holder;
         Glide.with(context).load(bitmaps[position]).into(vh.iv);
 
+        vh.tv.setText(viewName[position]);
 
     }
 
@@ -69,6 +75,7 @@ public class MenuAdapter extends RecyclerView.Adapter {
                         case 0 :
                             intent = new Intent(context, NaviActivity.class);
                             context.startActivity(intent);
+
                             break;
                         case 1 :
                             intent = new Intent(context, HowtoUseActivity.class);

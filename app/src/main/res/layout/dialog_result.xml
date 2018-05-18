@@ -44,7 +44,6 @@
             android:id="@+id/timeTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
             android:textSize="24dp"
             android:textColor="#ffffff"
             android:layout_toRightOf="@id/tv1" />
@@ -62,7 +61,6 @@
             android:id="@+id/chargeTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="sdaf"
             android:textSize="24dp"
             android:textColor="#ffffff"
             android:layout_alignParentBottom="true"

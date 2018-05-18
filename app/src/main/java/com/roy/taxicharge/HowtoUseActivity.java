@@ -9,5 +9,7 @@ public class HowtoUseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_howtouse);
+
+        //TODO : 실 사용 스크린샷 찍어 가볍게 편집 후 XML로 정리.
     }
 }
