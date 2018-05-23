@@ -1,10 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.roy.taxicharge.IntroActivity">
+    tools:context="com.roy.taxicharge.IntroActivity"
+    android:background="#F2CB61">
 
-</android.support.constraint.ConstraintLayout>
+    <RelativeLayout
+        android:id="@+id/intro_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TaxiCharge"
+            android:textSize="40sp"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:layout_centerInParent="true"
+            android:layout_alignBottom="@id/iv_taxi"/>
+
+        <ImageView
+            android:id="@+id/iv_taxi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/taxi_img" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

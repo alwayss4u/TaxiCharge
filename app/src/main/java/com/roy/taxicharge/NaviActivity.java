@@ -131,8 +131,6 @@ public class NaviActivity extends AppCompatActivity {
                     //testTv.append("Gauge = " + gauge +", LateTime = "+ lateTime*4.057 + "\n");
                     testTv.append(datelist.get(datelist.size()-1) +" - " + datelist.get(0) + " = " + (datelist.get(datelist.size()-1)- datelist.get(0)) + "\n");
 
-
-
                     testTv.append(hours +" : "+  minutes +" : "+(datelist.get(datelist.size()-1)-datelist.get(0))+"\n");
                     //if(basicChargeGauge<2000) testTv.append("기본Gauge" + basicChargeGauge +"\n");
                     if(gauge >=142){
@@ -182,9 +180,7 @@ public class NaviActivity extends AppCompatActivity {
                     }
                 }
             }
-
         }
-
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
 
@@ -240,8 +236,6 @@ public class NaviActivity extends AppCompatActivity {
             return;
         }
 
-
-        //Log.i("time", datelist.get(datelist.size()-1) +" - " + datelist.get(0) + " = " + (datelist.get(datelist.size()-1)- datelist.get(0)));
         //내 위치 자동 갱신 제거
         locationManager.removeUpdates(locationListener);
 
@@ -256,13 +250,18 @@ public class NaviActivity extends AppCompatActivity {
         LayoutInflater inflater= getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_result, null);
 
-        TextView hadTimeText = view.findViewById(R.id.timeTv);
+        TextView text_ResultTime = view.findViewById(R.id.timeTv);
         TextView taxiChargeText = view.findViewById(R.id.chargeTv);
 
         taxiChargeText.setText("￦ "+taxiCharge);
 
-        SimpleDateFormat sdfNow = new SimpleDateFormat("HH:mm:ss");
-        hadTimeText.setText(sdfNow.format(new Date((datelist.get(datelist.size()-1)-datelist.get(0))*1000)));
+        int minute_result = (int)((datelist.get(datelist.size()-1)-datelist.get(0))/60);
+
+        int second_result = (int)((datelist.get(datelist.size()-1)-datelist.get(0))%60);
+
+        int hour_result = minute_result/60;
+
+       text_ResultTime.setText(hour_result + " : " + (minute_result-hour_result*60) + " : " + second_result);
 
         builder.setView(view);
 
