@@ -73,7 +73,7 @@ public class MenuAdapter extends RecyclerView.Adapter {
                     Intent intent;
                     switch (getLayoutPosition()){
                         case 0 :
-                            intent = new Intent(context, NaviActivity.class);
+                            intent = new Intent(context, ChargeActivity.class);
                             context.startActivity(intent);
 
                             break;
@@ -82,7 +82,7 @@ public class MenuAdapter extends RecyclerView.Adapter {
                             context.startActivity(intent);
                             break;
                         case 2 :
-                            intent = new Intent(context, NaviActivity.class);
+                            intent = new Intent(context, ChargeActivity.class);
                             context.startActivity(intent);
                             break;
                     }

@@ -29,10 +29,11 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionbar">
+            android:theme="@style/AppTheme.NoActionbar"
+            android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".NaviActivity"
+            android:name=".ChargeActivity"
             android:theme="@style/AppTheme.NoActionbar"
             android:screenOrientation="landscape"/>
         <activity android:name=".HowtoUseActivity" />
