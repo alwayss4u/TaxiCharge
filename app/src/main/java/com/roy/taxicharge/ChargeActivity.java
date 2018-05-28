@@ -2,7 +2,9 @@ package com.roy.taxicharge;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -45,6 +47,7 @@ public class ChargeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_charge);
+
 
         testTv = findViewById(R.id.testTv);
 
@@ -234,7 +237,7 @@ public class ChargeActivity extends AppCompatActivity {
         locationManager.removeUpdates(locationListener);
 
         //AlertDialog를 만들어주는 건축가(Builder)객체 생성
-        AlertDialog.Builder builder= new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder= new AlertDialog.Builder(this);
         builder.setTitle("Result");
         builder.setIcon(android.R.drawable.ic_dialog_info);
 
@@ -262,6 +265,11 @@ public class ChargeActivity extends AppCompatActivity {
         builder.setPositiveButton("경로비교", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                //이전 Activity의 기록 삭제.
+
+                Intent intent = new Intent(builder.getContext(), ResultActivity.class);
+                intent.putExtra("course", position);
+                startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
 
             }
         });
@@ -269,6 +277,7 @@ public class ChargeActivity extends AppCompatActivity {
         builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                startActivity(new Intent(builder.getContext(), MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
 
             }
         });
@@ -277,8 +286,6 @@ public class ChargeActivity extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
 
-//        Intent intent = new Intent(v.getContext(), ResultActivity.class);
-//        startActivity(intent);
     }
 
     public void speedForHour(Location location){

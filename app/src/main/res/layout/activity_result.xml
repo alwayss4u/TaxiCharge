@@ -6,4 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".ResultActivity">
 
+    <com.nhn.android.maps.NMapView
+        android:id="@+id/naverMap"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        ></com.nhn.android.maps.NMapView>
+
 </android.support.constraint.ConstraintLayout>
