@@ -2,13 +2,12 @@ package com.roy.taxicharge;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
+import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapView;
 import com.nhn.android.maps.overlay.NMapPathData;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPathDataOverlay;
 import com.nhn.android.mapviewer.overlay.NMapResourceProvider;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -16,12 +15,11 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class ResultActivity extends AppCompatActivity {
+public class ResultActivity extends NMapActivity {
 
     private NMapView mMapView;// 지도 화면 View
-    private final String CLIENT_ID = "YOUR_CLIENT_ID";// 애플리케이션 클라이언트 아이디 값
+    private final String CLIENT_ID = "3l8gani7OtvloAAc4FQf";// 애플리케이션 클라이언트 아이디 값
     NMapResourceProvider nMapResourceProvider;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +33,17 @@ public class ResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_result);
         mMapView.setClientId(CLIENT_ID); // 클라이언트 아이디 값 설정
         mMapView.setEnabled(true);
+        mMapView.requestFocus();
+
+        mMapView = new NMapView(this);
+        //mMapView = findViewById(R.id.naverMap);
+        //setContentView(R.layout.activity_result);
+        setContentView(mMapView);
+        mMapView.setClientId(CLIENT_ID); // 클라이언트 아이디 값 설정
+        mMapView.setClickable(true);
+        mMapView.setEnabled(true);
+        mMapView.setFocusable(true);
+        mMapView.setFocusableInTouchMode(true);
         mMapView.requestFocus();
 
         NMapPathData pathData = new NMapPathData(position.size());
@@ -75,4 +84,6 @@ public class ResultActivity extends AppCompatActivity {
 //            System.out.println(e);
 //        }
     }
+
+
 }
