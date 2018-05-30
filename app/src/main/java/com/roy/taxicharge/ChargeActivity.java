@@ -40,7 +40,7 @@ public class ChargeActivity extends AppCompatActivity {
     int basicChargeGauge;
     int taxiCharge;
     float[] distanceForValue = new float[2]; //거리결과를 저장하는
-
+    Context context;
     TextView testTv;
 
     @Override
@@ -48,7 +48,7 @@ public class ChargeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_charge);
 
-
+        context = this;
         testTv = findViewById(R.id.testTv);
 
         speedTV = findViewById(R.id.speedTotext);
@@ -266,18 +266,26 @@ public class ChargeActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //이전 Activity의 기록 삭제.
+                Intent intent = new Intent(context, ResultActivity.class);
 
-                Intent intent = new Intent(builder.getContext(), ResultActivity.class);
-                intent.putExtra("course", position);
-                startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+                double[] latitudes = new double[position.size()];
+                double[] longitudes = new double[position.size()];
 
+                for (int k = 0; k< position.size(); k++){
+                    latitudes[k] = position.get(k).latitude;
+                    longitudes[k] = position.get(k).longitude;
+                }
+                intent.putExtra("latitude", latitudes);
+                intent.putExtra("longitude", longitudes);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
         });
 
         builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                startActivity(new Intent(builder.getContext(), MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+                startActivity(new Intent(context, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
 
             }
         });

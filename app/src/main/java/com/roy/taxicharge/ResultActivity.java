@@ -2,6 +2,8 @@ package com.roy.taxicharge;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapView;
 import com.nhn.android.maps.overlay.NMapPathData;
@@ -21,36 +23,39 @@ public class ResultActivity extends NMapActivity {
     private final String CLIENT_ID = "3l8gani7OtvloAAc4FQf";// 애플리케이션 클라이언트 아이디 값
     NMapResourceProvider nMapResourceProvider;
 
+    double[] longitudes;
+    double[] latitude;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        ArrayList<PositionType> position = getIntent().getParcelableExtra("course");
+        super.onCreate(savedInstanceState);
+
         //mMapViewerResourceProvider = new NMapViewerResourceProvider(this);
         //NMapOverlayManager mOverlayManager = new NMapOverlayManager(this, mMapView, mMapViewerResourceProvider);
+//        mMapView = findViewById(R.id.naverMap);
+//        setContentView(R.layout.activity_result);
+//        mMapView.setClientId(CLIENT_ID); // 클라이언트 아이디 값 설정
+//        mMapView.setEnabled(true);
+//        mMapView.requestFocus();
 
-        super.onCreate(savedInstanceState);
-        mMapView = findViewById(R.id.naverMap);
-        setContentView(R.layout.activity_result);
-        mMapView.setClientId(CLIENT_ID); // 클라이언트 아이디 값 설정
-        mMapView.setEnabled(true);
-        mMapView.requestFocus();
+        longitudes = getIntent().getDoubleArrayExtra("longitude");
+        latitude = getIntent().getDoubleArrayExtra("latitude");
 
         mMapView = new NMapView(this);
-        //mMapView = findViewById(R.id.naverMap);
-        //setContentView(R.layout.activity_result);
         setContentView(mMapView);
-        mMapView.setClientId(CLIENT_ID); // 클라이언트 아이디 값 설정
+        mMapView.setClientId(CLIENT_ID);
         mMapView.setClickable(true);
         mMapView.setEnabled(true);
         mMapView.setFocusable(true);
         mMapView.setFocusableInTouchMode(true);
         mMapView.requestFocus();
 
-        NMapPathData pathData = new NMapPathData(position.size());
+        NMapPathData pathData = new NMapPathData(longitudes.length);
 
-        for(int i= 0; i<position.size(); i++){
-            pathData.addPathPoint(position.get(i).latitude, position.get(i).longitude, 0);
-        }
+        for(int i= 0; i<longitudes.length; i++)
+            pathData.addPathPoint(latitude[i], longitudes[i], 0);
+
         pathData.endPathData();
 
         //NMapPathDataOverlay pathDataOverlay = mOverlayManager.createPathDataOverlay(pathData);
