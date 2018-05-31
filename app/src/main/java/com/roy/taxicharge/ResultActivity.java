@@ -1,11 +1,16 @@
 package com.roy.taxicharge;
 
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.ListView;
 
 import com.nhn.android.maps.NMapActivity;
+import com.nhn.android.maps.NMapOverlayItem;
 import com.nhn.android.maps.NMapView;
+import com.nhn.android.maps.overlay.NMapPOIitem;
 import com.nhn.android.maps.overlay.NMapPathData;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPathDataOverlay;
@@ -21,18 +26,22 @@ public class ResultActivity extends NMapActivity {
 
     private NMapView mMapView;// 지도 화면 View
     private final String CLIENT_ID = "3l8gani7OtvloAAc4FQf";// 애플리케이션 클라이언트 아이디 값
-    NMapResourceProvider nMapResourceProvider;
+
 
     double[] longitudes;
     double[] latitude;
+
+    NMapOverlayManager nMapOverlayManager;
+    nMapViewerResourceProvider nMapViewerResourceProvider = new nMapViewerResourceProvider(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
+
         //mMapViewerResourceProvider = new NMapViewerResourceProvider(this);
-        //NMapOverlayManager mOverlayManager = new NMapOverlayManager(this, mMapView, mMapViewerResourceProvider);
+        NMapOverlayManager mOverlayManager = new NMapOverlayManager(this, mMapView, nMapViewerResourceProvider);
 //        mMapView = findViewById(R.id.naverMap);
 //        setContentView(R.layout.activity_result);
 //        mMapView.setClientId(CLIENT_ID); // 클라이언트 아이디 값 설정
@@ -42,6 +51,7 @@ public class ResultActivity extends NMapActivity {
         longitudes = getIntent().getDoubleArrayExtra("longitude");
         latitude = getIntent().getDoubleArrayExtra("latitude");
 
+        nMapOverlayManager = new NMapOverlayManager();
         mMapView = new NMapView(this);
         setContentView(mMapView);
         mMapView.setClientId(CLIENT_ID);
@@ -53,12 +63,16 @@ public class ResultActivity extends NMapActivity {
 
         NMapPathData pathData = new NMapPathData(longitudes.length);
 
+        pathData.initPathData();
+
         for(int i= 0; i<longitudes.length; i++)
             pathData.addPathPoint(latitude[i], longitudes[i], 0);
 
         pathData.endPathData();
 
-        //NMapPathDataOverlay pathDataOverlay = mOverlayManager.createPathDataOverlay(pathData);
+
+
+        NMapPathDataOverlay pathDataOverlay = nMapOverlayManager.createPathDataOverlay();
 
 //        String clientId = "YOUR_CLIENT_ID";//애플리케이션 클라이언트 아이디값";
 //        String clientSecret = "YOUR_CLIENT_SECRET";//애플리케이션 클라이언트 시크릿값";
@@ -89,6 +103,5 @@ public class ResultActivity extends NMapActivity {
 //            System.out.println(e);
 //        }
     }
-
 
 }
