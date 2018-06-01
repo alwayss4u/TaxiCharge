@@ -8,8 +8,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.nhn.android.maps.NMapActivity;
+import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapOverlayItem;
 import com.nhn.android.maps.NMapView;
+import com.nhn.android.maps.maplib.NGeoPoint;
+import com.nhn.android.maps.nmapmodel.NMapError;
 import com.nhn.android.maps.overlay.NMapPOIitem;
 import com.nhn.android.maps.overlay.NMapPathData;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
@@ -22,6 +25,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
+import static com.nhn.android.naverlogin.OAuthLoginDefine.LOG_TAG;
+
 public class ResultActivity extends NMapActivity {
 
     private NMapView mMapView;// 지도 화면 View
@@ -29,29 +34,21 @@ public class ResultActivity extends NMapActivity {
 
 
     double[] longitudes;
-    double[] latitude;
+    double[] latitudes;
 
     NMapOverlayManager nMapOverlayManager;
-    nMapViewerResourceProvider nMapViewerResourceProvider = new nMapViewerResourceProvider(this);
+    //nMapViewerResourceProvider nMapViewerResourceProvider = new nMapViewerResourceProvider(this);
+    NMapController mMapController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
-
-        //mMapViewerResourceProvider = new NMapViewerResourceProvider(this);
-        NMapOverlayManager mOverlayManager = new NMapOverlayManager(this, mMapView, nMapViewerResourceProvider);
-//        mMapView = findViewById(R.id.naverMap);
-//        setContentView(R.layout.activity_result);
-//        mMapView.setClientId(CLIENT_ID); // 클라이언트 아이디 값 설정
-//        mMapView.setEnabled(true);
-//        mMapView.requestFocus();
+        //NMapOverlayManager mOverlayManager = new NMapOverlayManager(this, mMapView, nMapViewerResourceProvider);
 
         longitudes = getIntent().getDoubleArrayExtra("longitude");
-        latitude = getIntent().getDoubleArrayExtra("latitude");
+        latitudes = getIntent().getDoubleArrayExtra("latitude");
 
-        nMapOverlayManager = new NMapOverlayManager();
         mMapView = new NMapView(this);
         setContentView(mMapView);
         mMapView.setClientId(CLIENT_ID);
@@ -61,18 +58,24 @@ public class ResultActivity extends NMapActivity {
         mMapView.setFocusableInTouchMode(true);
         mMapView.requestFocus();
 
+
+        // use map controller to zoom in/out, pan and set map center, zoom level etc.
+        mMapController = mMapView.getMapController();
+
+        mMapView.setBuiltInZoomControls(true, null);
+        //지도를 확대하거나 축소할 때 내장된 컨트롤러를 사용
         NMapPathData pathData = new NMapPathData(longitudes.length);
 
         pathData.initPathData();
 
         for(int i= 0; i<longitudes.length; i++)
-            pathData.addPathPoint(latitude[i], longitudes[i], 0);
+            pathData.addPathPoint(latitudes[i], longitudes[i], 0);
 
         pathData.endPathData();
 
 
 
-        NMapPathDataOverlay pathDataOverlay = nMapOverlayManager.createPathDataOverlay();
+//        NMapPathDataOverlay pathDataOverlay = nMapOverlayManager.createPathDataOverlay();
 
 //        String clientId = "YOUR_CLIENT_ID";//애플리케이션 클라이언트 아이디값";
 //        String clientSecret = "YOUR_CLIENT_SECRET";//애플리케이션 클라이언트 시크릿값";
@@ -102,6 +105,14 @@ public class ResultActivity extends NMapActivity {
 //        } catch (Exception e) {
 //            System.out.println(e);
 //        }
+    }
+
+    public void onMapInitHandler(NMapView mapView, NMapError errorInfo) {
+        if (errorInfo == null) { // success
+            mMapController.setMapCenter(new NGeoPoint(latitudes[latitudes.length/2], longitudes[longitudes.length/2]), 11);
+        } else { // fail
+            Log.e(LOG_TAG, "onMapInitHandler: error=" + errorInfo.toString());
+        }
     }
 
 }
